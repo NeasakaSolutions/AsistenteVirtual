@@ -1,0 +1,47 @@
+# Importaciones:
+import speech_recognition as sr
+import pyttsx3
+
+# Variables:
+listener = sr.Recognizer() # Reconocer la voz
+engine = pyttsx3.init() # Hacer que hable el asistente
+
+# Cambio de idiomas
+voces = engine.getProperty('voices')
+engine.setProperty('voice', voces[0].id)
+
+# Velocidad con la que hablara:
+rate = engine.getProperty('rate')
+engine.setProperty('rate', 200)
+
+# Bienvenida:
+def welcome():
+    engine.say("¡Ubaldo-san! ¡Bienvenido!. ¿Qué necesitas? ¿Información, música… o comida? Bueno, si es comida, yo me encargo.")
+    engine.runAndWait() # Siempre va despues de un say
+
+def hablar(por_hablar):
+    engine.say(por_hablar)
+    engine.runAndWait() # Siempre va despues de un say
+
+welcome()
+
+# Bucle para reconocer palabras:
+while True:
+
+    # Activar microfono:
+    with sr.Microphone() as source:
+        print('Escuchando...')
+
+        # Escuchar la voz:
+        audio = listener.listen(source, phrase_time_limit = 5)
+
+        try:
+            # Decodificar audio a texto:
+            print('Reconociendo...')
+            text = listener.recognize_google(audio, language = 'es-US')
+            hablar(text)
+            print(text)
+        
+        except Exception as e:
+            hablar('No se entendio el mensaje')
+            print(e) # Imprimir error

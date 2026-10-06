@@ -1,47 +1,65 @@
-# Importaciones:
+#Importaciones:
 import speech_recognition as sr
 import pyttsx3
+import datetime
 
 # Variables:
 listener = sr.Recognizer() # Reconocer la voz
-engine = pyttsx3.init() # Hacer que hable el asistente
 
-# Cambio de idiomas
-voces = engine.getProperty('voices')
-engine.setProperty('voice', voces[0].id)
+# Hacer que  el asistente hable:
+def hablar(texto):
+    print("Asistente:", texto) # Muestra el texto que debe de leer
 
-# Velocidad con la que hablara:
-rate = engine.getProperty('rate')
-engine.setProperty('rate', 200)
+    # Configuracion de la voz
+    engine = pyttsx3.init() # Hacer que hable el asistente
+    engine.setProperty("rate", 200) # Velocidad con la que hablara
+    engine.say(texto)
+    engine.runAndWait() # Siempre va despues de un say
+    engine.stop()
 
-# Bienvenida:
+    del engine
+
+# Funcion de bienvenida:
 def welcome():
-    engine.say("¡Ubaldo-san! ¡Bienvenido!. ¿Qué necesitas? ¿Información, música… o comida? Bueno, si es comida, yo me encargo.")
-    engine.runAndWait() # Siempre va despues de un say
+    hablar(
+        "¡Meowchele-san! ¡Bienvenido! "
+        "¿Qué necesitas? ¿Información, música o comida? "
+        "Bueno, si es comida, yo me encargo."
+    )
 
-def hablar(por_hablar):
-    engine.say(por_hablar)
-    engine.runAndWait() # Siempre va despues de un say
+
+def escuchar():
+    # Repetir la escucha del asistente:
+    while True:
+
+        # Activar microfono:
+        with sr.Microphone() as source:
+
+            print("Escuchando...")
+            audio = listener.listen(source, phrase_time_limit=5) # Velocidad con la que hablara
+
+        try:
+
+            # Decodificar audio a texto:
+            print("Reconociendo...")
+            text = listener.recognize_google(audio, language="es-US")
+            print("Tú:", text)
+            hablar(text)
+
+            return text
+
+        except sr.UnknownValueError:
+
+            print("No entendí el mensaje")
+            hablar("No entendí el mensaje")
+
+        except sr.RequestError as e:
+
+            print("Error con el reconocimiento:", e)
+            hablar("Hay un problema con el reconocimiento")
+
 
 welcome()
 
-# Bucle para reconocer palabras:
-while True:
-
-    # Activar microfono:
-    with sr.Microphone() as source:
-        print('Escuchando...')
-
-        # Escuchar la voz:
-        audio = listener.listen(source, phrase_time_limit = 5)
-
-        try:
-            # Decodificar audio a texto:
-            print('Reconociendo...')
-            text = listener.recognize_google(audio, language = 'es-US')
-            hablar(text)
-            print(text)
-        
-        except Exception as e:
-            hablar('No se entendio el mensaje')
-            print(e) # Imprimir error
+if 'que hora es' in escuchar():
+    pass

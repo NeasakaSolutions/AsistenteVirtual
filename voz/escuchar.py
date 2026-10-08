@@ -31,7 +31,8 @@ def escuchar():
         except sr.UnknownValueError:
 
             print("No entendí el mensaje")
-            hablar("No entendí el mensaje")
+            hablar("Eh... ¿eso era idioma humano o qué? "
+                   " No te entendí nada. ¡A ver, dímelo otra vez, pero despacio!")
 
         except sr.RequestError as error:
 

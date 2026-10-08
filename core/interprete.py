@@ -4,6 +4,7 @@ from comandos.sistema import salir
 from comandos.musica import reproducir_musica
 from comandos.clima import consultar_clima
 from comandos.comida import buscar_comida
+from comandos.dia import decir_dia
 from voz.hablar import hablar
 
 # Reconocer las palabras clave para las funciones:
@@ -15,7 +16,7 @@ def ejecutar_comando(texto):
         decir_hora()
 
     # Despedida
-    elif "salir" in texto:
+    elif "salir" in texto or "voy" in texto:
 
         return salir()
 
@@ -23,6 +24,10 @@ def ejecutar_comando(texto):
     elif "música" in texto or "musica" in texto:
 
         reproducir_musica()
+
+    # Dia:
+    elif "día" in texto:
+        decir_dia()
 
     # Clima:
     elif "clima" in texto:

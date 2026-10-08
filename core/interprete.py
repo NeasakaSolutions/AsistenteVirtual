@@ -5,13 +5,20 @@ from comandos.musica import reproducir_musica
 from comandos.clima import consultar_clima
 from comandos.comida import buscar_comida
 from comandos.dia import decir_dia
+from comandos.wikipedia import busqueda_wikipedia
 from voz.hablar import hablar
 
 # Reconocer las palabras clave para las funciones:
 def ejecutar_comando(texto):
 
+    print(f"[DEBUG] Comando recibido: {texto}") # Debugin
+
+    # Wikipedia
+    if "busca en wikipedia" in texto:
+        busqueda_wikipedia(texto)
+
     # Hora
-    if "hora" in texto:
+    elif "hora" in texto:
 
         decir_hora()
 
@@ -26,7 +33,7 @@ def ejecutar_comando(texto):
         reproducir_musica()
 
     # Dia:
-    elif "día" in texto:
+    elif "día" in texto or "dia" in texto:
         decir_dia()
 
     # Clima:
@@ -42,6 +49,7 @@ def ejecutar_comando(texto):
     # En caso de no tener comando alguno:
     else:
 
-        hablar("No conozco ese comando todavía.")
+        hablar("¡Oye! ¿Me viste cara de bola de cristal? No tengo esa función programada. "
+               "Revisa bien tus comandos antes de pedirme cosas imposibles.")
 
     return True

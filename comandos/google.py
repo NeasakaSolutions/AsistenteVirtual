@@ -17,11 +17,30 @@ def busqueda_google(busca):
     # Formatear el texto:
     busca = busca.replace("busca en google", "").strip()
 
-    # Respuesta del asistente:
-    hablar(f"¡Sacando los binoculares de Teto-sama! Buscando '{busca}'"
-           f"en Google... ¡A ver qué sorpresas encontramos, {NAME_USER}!")
+    # Comprobar que el usuario especifico la busqueda:
+    if not busca:
+        hablar(
+            f"¿Y qué se supone que debo buscar, {NAME_USER}? " 
+            "¡Mis poderes de Teto-sama no leen la mente!"
+        )
 
-    # Realizar busqueda:
-    pywhatkit.search(busca)
+        return
+
+    try:
+
+        # Respuesta del asistente:
+        hablar(f"¿Eh? Busqué por todos lados y no encontré nada sobre '{busca}'. "
+                    f"¡Seguro ni existe o lo dijiste mal, {NAME_USER}!")
+
+        # Realizar busqueda:
+        pywhatkit.search(busca)
+
+    except Exception as error:
+
+        # Debugin:
+        print(f"Error con la busqueda en google: {error}")
+
+        hablar("¡Oye, ocurrió un error rarísimo! Algo falló en la búsqueda... "
+            "¡Seguro fue culpa de Miku o de mi conexión!")
 
 

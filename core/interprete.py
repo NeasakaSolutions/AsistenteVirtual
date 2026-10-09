@@ -8,6 +8,7 @@ from comandos.wikipedia import busqueda_wikipedia
 from comandos.google import busqueda_google
 from comandos.youtube import busqueda_youtube
 from comandos.chistes import chiste
+from comandos.captura import captura_pantalla
 from voz.hablar import hablar
 
 # Reconocer las palabras clave para las funciones:
@@ -29,6 +30,11 @@ def ejecutar_comando(texto):
     elif "busca en youtube" in texto:
 
         busqueda_youtube(texto)
+
+    # Captura de pantalla:
+    elif "captura de pantalla" in texto or "screenshot" in texto:
+
+        captura_pantalla()
 
     # Chistes:
     elif "chiste" in texto or "chascarrillo" in texto:

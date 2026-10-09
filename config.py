@@ -22,3 +22,4 @@ WEATHER_API_KEY = os.getenv("WHEATHER_API_KEY")
 NAME_USER = "Meowchele-san"
 LAT = os.getenv("LAT_LOCATION")
 LON = os.getenv("LON_LOCATION")
+CARPETA_CAPTURAS="CapturasTeto"

@@ -1,6 +1,5 @@
 # Importaciones:
 import datetime
-from config import NAME_USER
 from voz.hablar import hablar
 
 # Funcion principal

@@ -6,8 +6,8 @@ load_dotenv()
 
 # Reconocimiento de voz:
 IDIOMA = "es-US"
-VELOCIDAD_VOZ = 200
-TIEMPO_ESCUCHA = 5
+#VELOCIDAD_VOZ = 200
+TIEMPO_ESCUCHA = 2
 PAUSE_THRESHOLD = 0.5
 
 # Fish Audio:

@@ -6,16 +6,21 @@ from comandos.clima import consultar_clima
 from comandos.comida import buscar_comida
 from comandos.dia import decir_dia
 from comandos.wikipedia import busqueda_wikipedia
+from comandos.google import busqueda_google
 from voz.hablar import hablar
 
 # Reconocer las palabras clave para las funciones:
 def ejecutar_comando(texto):
 
-    print(f"[DEBUG] Comando recibido: {texto}") # Debugin
+    #print(f"[DEBUG] Comando recibido: {texto}") # Debugin
 
     # Wikipedia
     if "busca en wikipedia" in texto:
         busqueda_wikipedia(texto)
+
+    # Google:
+    if "busca en google" in texto:
+        busqueda_google(texto)
 
     # Hora
     elif "hora" in texto:

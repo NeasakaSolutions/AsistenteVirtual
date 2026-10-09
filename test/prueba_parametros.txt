@@ -1,0 +1,88 @@
+import asyncio
+import json
+
+from integraciones.vtube_studio import conectar_vtube
+
+
+async def consultar_parametros():
+    websocket = await conectar_vtube()
+
+    try:
+        # 1. Consultar parámetros de seguimiento disponibles
+        solicitud_tracking = {
+            "apiName": "VTubeStudioPublicAPI",
+            "apiVersion": "1.0",
+            "requestID": "MeowcheleTrackingParameters",
+            "messageType": "InputParameterListRequest",
+            "data": {}
+        }
+
+        await websocket.send(json.dumps(solicitud_tracking))
+        respuesta_tracking = json.loads(await websocket.recv())
+
+        if respuesta_tracking.get("messageType") == "APIError":
+            print("Error al consultar seguimiento:")
+            print(respuesta_tracking.get("data", {}))
+        else:
+            datos = respuesta_tracking.get("data", {})
+
+            print("\n===== PARÁMETROS DE SEGUIMIENTO =====")
+
+            for parametro in datos.get("defaultParameters", []):
+                print(
+                    f"{parametro.get('name')} | "
+                    f"Valor: {parametro.get('value')} | "
+                    f"Mínimo: {parametro.get('min')} | "
+                    f"Máximo: {parametro.get('max')}"
+                )
+
+            print("\n===== PARÁMETROS PERSONALIZADOS =====")
+
+            for parametro in datos.get("customParameters", []):
+                print(
+                    f"{parametro.get('name')} | "
+                    f"Valor: {parametro.get('value')} | "
+                    f"Mínimo: {parametro.get('min')} | "
+                    f"Máximo: {parametro.get('max')} | "
+                    f"Creado por: {parametro.get('addedBy')}"
+                )
+
+        # 2. Consultar parámetros internos del modelo Live2D
+        solicitud_modelo = {
+            "apiName": "VTubeStudioPublicAPI",
+            "apiVersion": "1.0",
+            "requestID": "MeowcheleLive2DParameters",
+            "messageType": "Live2DParameterListRequest",
+            "data": {}
+        }
+
+        await websocket.send(json.dumps(solicitud_modelo))
+        respuesta_modelo = json.loads(await websocket.recv())
+
+        if respuesta_modelo.get("messageType") == "APIError":
+            print("\nError al consultar el modelo:")
+            print(respuesta_modelo.get("data", {}))
+        else:
+            datos_modelo = respuesta_modelo.get("data", {})
+
+            print("\n===== PARÁMETROS INTERNOS DEL MODELO =====")
+            print("Modelo:", datos_modelo.get("modelName", "Desconocido"))
+
+            for parametro in datos_modelo.get("parameters", []):
+                nombre = parametro.get("name", "")
+
+                # Mostrar todos para no pasar por alto
+                # nombres de boca que sean diferentes.
+                print(
+                    f"{nombre} | "
+                    f"Valor: {parametro.get('value')} | "
+                    f"Mínimo: {parametro.get('min')} | "
+                    f"Máximo: {parametro.get('max')}"
+                )
+
+    finally:
+        await websocket.close()
+
+
+if __name__ == "__main__":
+    asyncio.run(consultar_parametros())

@@ -1,10 +1,12 @@
-# Meowchele — Asistente de Voz
+# Kasane Teto — Asistente de Voz
 
-Meowchele es un asistente de voz desarrollado en **Python**.
+Asistente virtual desarrollado en **Python**, inspirado en Kasane Teto.
 
 El proyecto nace como una práctica para aprender y aplicar conceptos de programación mientras se construye, poco a poco, un asistente capaz de **escuchar comandos mediante el micrófono, interpretar las solicitudes del usuario y responder mediante voz**.
 
-La idea es ir agregando nuevas capacidades progresivamente, manteniendo el proyecto organizado y fácil de ampliar.
+Además, el proyecto integra un avatar Live2D mediante VTube Studio, permitiendo controlar sus hotkeys y animar la boca mientras se reproduce la voz del asistente.
+
+La idea es incorporar nuevas capacidades progresivamente, manteniendo el código organizado, modular y fácil de ampliar.
 
 ---
 
@@ -12,43 +14,53 @@ La idea es ir agregando nuevas capacidades progresivamente, manteniendo el proye
 
 Los principales objetivos del proyecto son:
 
-* Reconocer comandos mediante la voz.
-* Interpretar las solicitudes del usuario.
-* Responder utilizando síntesis de voz.
-* Utilizar una voz personalizada mediante **Fish Audio**.
-* Consultar información como la hora.
-* Incorporar comandos relacionados con música.
-* Incorporar consultas del clima.
-* Agregar funciones relacionadas con comida.
-* Controlar algunas funciones del sistema.
-* Mantener una arquitectura modular que permita agregar nuevos comandos fácilmente.
-* Mejorar progresivamente la interpretación del lenguaje natural.
+- Reconocer comandos mediante la voz.
+- Interpretar las solicitudes del usuario.
+- Responder utilizando síntesis de voz.
+- Utilizar una voz personalizada mediante **Fish Audio**.
+- Consultar información como la hora.
+- Incorporar comandos relacionados con música.
+- Incorporar consultas del clima.
+- Agregar funciones relacionadas con comida.
+- Controlar algunas funciones del sistema.
+- Controlar expresiones y acciones de un avatar mediante VTube Studio.
+- Animar la boca del avatar durante la reproducción de voz.
+- Mejorar progresivamente la interpretación del lenguaje natural.
+- Mantener una arquitectura modular que permita agregar nuevos comandos fácilmente.
 
 El proyecto se encuentra en desarrollo y sus funcionalidades irán creciendo con el tiempo.
 
 ---
 
-## Tecnologías
+## Tecnologías utilizadas
 
-Actualmente se utilizan:
-
-* **Python** — lenguaje principal del proyecto.
-* **SpeechRecognition** — reconocimiento de voz.
-* **PyAudio** — acceso al micrófono.
-* **Fish Audio** — generación de voz mediante inteligencia artificial.
-* **Fish Audio SDK** — comunicación con la API de Fish Audio.
-* **Pygame** — reproducción del audio generado.
-* **python-dotenv** — gestión de variables de entorno.
+| Tecnología | Función |
+|---|---|
+| **Python** | Lenguaje principal del proyecto. |
+| **SpeechRecognition** | Reconocimiento de voz. |
+| **PyAudio** | Acceso al micrófono para capturar audio. |
+| **Fish Audio** | Generación de voz mediante inteligencia artificial. |
+| **Fish Audio SDK** | Comunicación con la API de Fish Audio. |
+| **Pygame** | Reproducción y control del audio generado. |
+| **VTube Studio API** | Comunicación y control del avatar Live2D. |
+| **WebSockets** | Comunicación con la API de VTube Studio. |
+| **asyncio** | Ejecución de operaciones asíncronas. |
+| **threading** | Ejecución del controlador de boca en un hilo independiente. |
+| **python-dotenv** | Gestión de variables de entorno. |
+| **Git** | Control de versiones del código fuente. |
 
 ---
 
 ## Estructura del proyecto
 
+La estructura actual separa la entrada del programa, la voz, los comandos, la interpretación y las integraciones externas.
+
 ```text
-meowchele/
+AsistenteVirtual/
 │
 ├── .env
 ├── .gitignore
+├── README.md
 ├── main.py
 ├── config.py
 │
@@ -59,38 +71,41 @@ meowchele/
 │
 ├── comandos/
 │   ├── __init__.py
-│   ├── hora.py
-│   ├── musica.py
-│   ├── clima.py
-│   ├── comida.py
-│   └── sistema.py
+│   └── avatar.py
 │
-└── core/
-    ├── __init__.py
-    └── interprete.py
+├── core/
+│   ├── __init__.py
+│   └── interprete.py
+│
+└── integraciones/
+    └── vtube_studio.py
 ```
+
+Los archivos `__init__.py` pueden estar vacíos; permiten organizar los directorios como paquetes de Python.
+
+A medida que se desarrollen nuevas funcionalidades, podrán agregarse módulos como `hora.py`, `musica.py`, `clima.py`, `comida.py` y `sistema.py` dentro de `comandos/`.
 
 ### `main.py`
 
-Es el **punto de entrada** del programa.
+Es el punto de entrada del programa.
 
-Se encarga de iniciar el asistente y mantener el ciclo principal:
+Se encarga de:
 
-```text
-Escuchar → Interpretar → Ejecutar → Escuchar nuevamente
-```
+- Preparar el avatar al iniciar.
+- Ejecutar el saludo inicial.
+- Mantener el ciclo principal de escucha y procesamiento.
+- Finalizar el programa cuando el intérprete indique que debe salir.
+- Liberar el controlador de boca al terminar la ejecución.
 
-La intención es mantener este archivo lo más sencillo posible y delegar las responsabilidades a los diferentes módulos.
-
----
+El objetivo es mantener este archivo sencillo y delegar las responsabilidades a los módulos correspondientes.
 
 ### `config.py`
 
 Contiene las configuraciones generales del asistente.
 
-Entre ellas se encuentran las configuraciones relacionadas con el reconocimiento de voz y Fish Audio.
+Entre ellas se encuentran los parámetros de reconocimiento de voz, la conexión con VTube Studio y las credenciales necesarias para Fish Audio.
 
-Por ejemplo:
+Por ejemplo, la configuración puede incluir:
 
 ```python
 IDIOMA = "es-US"
@@ -102,22 +117,24 @@ FISH_VOICE_ID = os.getenv("FISH_VOICE_ID")
 FISH_MODEL = "s2.1-pro-free"
 ```
 
-La API key y el identificador de la voz se almacenan mediante variables de entorno para evitar incluir información sensible directamente en el código.
+Los valores definitivos deben corresponder a los nombres que utiliza el `config.py` actual del proyecto.
+
+La API key, el identificador de voz y el token de VTube Studio se gestionan mediante variables de entorno, evitando incluir credenciales directamente en el código fuente.
 
 ---
 
 ## Módulo `voz`
 
-Este módulo contiene todo lo relacionado con la interacción mediante voz.
+Contiene la lógica relacionada con la interacción mediante voz.
 
 ### `voz/escuchar.py`
 
 Se encarga de:
 
-* Activar el micrófono.
-* Capturar el audio.
-* Convertir el audio a texto.
-* Manejar errores del reconocimiento.
+- Activar el micrófono.
+- Capturar el audio del usuario.
+- Convertir el audio a texto.
+- Manejar errores durante el reconocimiento.
 
 Su función principal es:
 
@@ -125,13 +142,11 @@ Su función principal es:
 escuchar()
 ```
 
-El texto reconocido posteriormente es enviado al intérprete de comandos.
-
----
+El texto reconocido se envía posteriormente al intérprete de comandos.
 
 ### `voz/hablar.py`
 
-Se encarga de generar y reproducir la voz de Meowchele utilizando **Fish Audio**.
+Se encarga de generar y reproducir las respuestas habladas utilizando **Fish Audio**.
 
 Su función principal es:
 
@@ -142,284 +157,371 @@ hablar(texto)
 Por ejemplo:
 
 ```python
-hablar("Hola, soy Meowchele.")
+hablar("¡Oha-teto! ¿En qué puedo ayudarte?")
 ```
 
-El funcionamiento general es:
+El flujo de generación de voz es:
 
 ```text
-Texto
-  ↓
-Fish Audio
-  ↓
-Audio generado
-  ↓
-Pygame
-  ↓
+Texto de respuesta
+       ↓
+   Fish Audio
+       ↓
+   Audio generado
+       ↓
+ Guardado temporal
+       ↓
+     Pygame
+       ↓
  Voz de Kasane Teto
 ```
 
-La voz utilizada por el asistente se identifica mediante `FISH_VOICE_ID` y la comunicación con Fish Audio utiliza una API key almacenada en `.env`.
+La voz se configura mediante `FISH_VOICE_ID`, mientras que `FISH_API_KEY` permite autenticar las solicitudes a Fish Audio.
 
-La implementación de la voz está aislada dentro de este módulo para que el resto del proyecto pueda utilizar simplemente:
+El audio generado se guarda temporalmente para su reproducción y se elimina al terminar el proceso de voz.
 
-```python
-hablar("Hola")
-```
+#### Integración con el movimiento de boca
 
-sin necesitar conocer cómo se genera o reproduce el audio.
+`hablar()` también coordina la animación de la boca del avatar:
+
+1. Genera el audio mediante Fish Audio.
+2. Guarda el audio temporalmente.
+3. Carga el archivo en Pygame.
+4. Activa el movimiento de boca.
+5. Reproduce la voz.
+6. Espera hasta que termina la reproducción.
+7. Detiene el movimiento y cierra la boca.
+8. Elimina el archivo temporal.
+
+Los comandos solo necesitan llamar a `hablar(texto)`. No deben implementar individualmente el movimiento de boca.
+
+Esto permite mantener separada la lógica de voz y evita duplicar código en cada comando.
+
+**Limitación actual:** la animación de boca utiliza una oscilación periódica de apertura y cierre durante la reproducción. Está sincronizada con la duración de la voz, pero todavía no realiza sincronización labial precisa por fonemas o sílabas.
 
 ---
 
-## Variables de entorno
+## Integración con VTube Studio
 
-El proyecto utiliza un archivo `.env` para almacenar información que no debe incluirse directamente en el código fuente.
+El módulo `integraciones/vtube_studio.py` contiene la comunicación con VTube Studio mediante su API pública y WebSockets.
 
-Ejemplo:
+Sus responsabilidades incluyen:
 
-```env
-FISH_API_KEY=TU_API_KEY
-FISH_VOICE_ID=TU_VOICE_ID
+- Conectar y autenticar al asistente.
+- Consultar las hotkeys disponibles del modelo actual.
+- Activar hotkeys configuradas en VTube Studio.
+- Controlar el movimiento de boca durante la reproducción de voz.
+- Cerrar la conexión al finalizar el programa.
+
+### Control de hotkeys
+
+Las hotkeys permiten activar acciones del avatar, como cambios de expresión, ropa u otros efectos configurados en el modelo.
+
+Las funciones principales utilizadas para esta tarea son:
+
+```python
+activar_hotkey(hotkey_id)
+listar_hotkeys()
 ```
 
-El archivo `.env` **no debe subirse al repositorio**.
+El módulo `comandos/avatar.py` utiliza estas capacidades para ejecutar acciones relacionadas con el avatar.
 
-Por este motivo, `.gitignore` debe incluir:
+### Control de boca
 
-```gitignore
-.env
-__pycache__/
-*.pyc
+El movimiento de boca se gestiona mediante funciones específicas:
+
+```python
+iniciar_movimiento_boca()
+detener_movimiento_boca()
+cerrar_control_boca()
 ```
 
-Los directorios `__pycache__` y los archivos `.pyc` son archivos generados automáticamente por Python y no forman parte del código fuente del proyecto.
+Su propósito es:
+
+- Iniciar la animación cuando comienza la reproducción de voz.
+- Detenerla cuando termina la reproducción.
+- Mantener el controlador disponible entre frases consecutivas.
+- Liberar la conexión cuando el asistente finaliza.
+
+La conexión persistente busca reducir las reconexiones y la latencia entre respuestas. Su funcionamiento debe verificarse con las pruebas de integración del proyecto.
+
+El control utiliza el parámetro de seguimiento `MouthOpen` de VTube Studio, no el parámetro interno de Live2D `ParamMouthOpenY`.
 
 ---
 
 ## Módulo `comandos`
 
-Aquí se encuentran las **capacidades individuales de Meowchele**.
+Este módulo contiene las capacidades individuales del asistente. La idea es que cada funcionalidad tenga su propia responsabilidad y pueda ampliarse sin convertir `main.py` en un archivo demasiado grande.
 
-Cada archivo representa una categoría o funcionalidad específica.
+### `comandos/avatar.py`
 
-### `comandos/hora.py`
+Contiene acciones relacionadas con la preparación y el control del avatar.
 
-Contiene las funciones relacionadas con la hora.
+Actualmente incluye funciones para:
 
-```python
-decir_hora()
-```
+- Eliminar toggles activos.
+- Quitar la marca de agua.
+- Cambiar la ropa.
+- Activar la hotkey de baguette.
+- Ejecutar otras acciones configuradas para el modelo.
 
----
+Las acciones disponibles dependen de las hotkeys y configuraciones del modelo de VTube Studio.
 
-### `comandos/musica.py`
+### Módulos previstos
 
-Contendrá las funciones relacionadas con la reproducción y control de música.
+Los siguientes módulos representan funcionalidades que se pueden incorporar progresivamente. No significa que todos estén implementados actualmente.
 
-Actualmente se encuentra en desarrollo.
+| Módulo | Responsabilidad prevista |
+|---|---|
+| `comandos/hora.py` | Consultar y anunciar la hora. |
+| `comandos/musica.py` | Reproducir y controlar música. |
+| `comandos/clima.py` | Consultar información meteorológica. |
+| `comandos/comida.py` | Buscar o recomendar comida. |
+| `comandos/sistema.py` | Controlar funciones del sistema y salir del asistente. |
 
----
-
-### `comandos/clima.py`
-
-Contendrá las funciones relacionadas con consultas meteorológicas.
-
-Actualmente se encuentra en desarrollo.
-
----
-
-### `comandos/comida.py`
-
-Contendrá las funciones relacionadas con búsqueda o recomendaciones de comida.
-
-Actualmente se encuentra en desarrollo.
-
----
-
-### `comandos/sistema.py`
-
-Contiene comandos relacionados con el funcionamiento del propio asistente o del sistema.
-
-Por ejemplo:
-
-```python
-salir()
-```
+Cuando se agreguen, cada comando podrá llamar a `hablar()` para responder mediante voz sin tener que implementar de nuevo la integración con Fish Audio y VTube Studio.
 
 ---
 
 ## Módulo `core`
 
-Contiene la lógica principal que conecta lo que dice el usuario con los comandos disponibles.
-
 ### `core/interprete.py`
 
-Su responsabilidad es determinar **qué comando corresponde al texto recibido**.
+Contiene la lógica que conecta las instrucciones del usuario con las funciones disponibles.
+
+Su responsabilidad principal es determinar qué comando corresponde al texto recibido y ejecutar la acción adecuada.
 
 Por ejemplo:
 
 ```text
 Usuario:
-
 "¿Qué hora es?"
-
-        ↓
-
-interpreter
-
-        ↓
-
-decir_hora()
-
-        ↓
-
-Meowchele:
-
-"Son las 8:30."
+       ↓
+  escuchar()
+       ↓
+Texto reconocido
+       ↓
+ejecutar_comando(texto)
+       ↓
+   Comando de hora
+       ↓
+   hablar(texto)
+       ↓
+Respuesta hablada
 ```
 
-Actualmente el intérprete utiliza palabras clave para identificar los comandos.
+Actualmente, la interpretación se basa en las reglas y palabras clave definidas en el código.
 
-A futuro se busca mejorar esta parte para permitir una interpretación más natural de las solicitudes.
+En el futuro se busca mejorar la interpretación del lenguaje natural para reconocer solicitudes formuladas de distintas maneras.
 
 ---
 
-## Flujo del asistente
-
-El funcionamiento general del programa es:
+## Flujo general del asistente
 
 ```text
-                  ┌─────────────┐
-                  │   main.py   │
-                  └──────┬──────┘
-                         │
-                         ▼
-                ┌────────────────┐
-                │    escuchar()  │
-                └───────┬────────┘
-                        │
-                        ▼
-                 Texto del usuario
-                        │
-                        ▼
-              ┌──────────────────┐
-              │ ejecutar_comando │
-              └────────┬─────────┘
-                       │
-          ┌────────────┼────────────┐
-          ▼            ▼            ▼
-       hora.py      musica.py    clima.py
-          │            │            │
-          └────────────┼────────────┘
-                       ▼
-                   hablar()
-                       │
-                       ▼
-                 Fish Audio
-                       │
-                       ▼
-                Voz de Meowchele
+                 ┌──────────────┐
+                 │    main.py   │
+                 └──────┬───────┘
+                        ↓
+                 ┌──────────────┐
+                 │  escuchar()  │
+                 └──────┬───────┘
+                        ↓
+                Texto reconocido
+                        ↓
+              ┌───────────────────┐
+              │ ejecutar_comando()│
+              └─────────┬─────────┘
+                        ↓
+                Comando seleccionado
+                        ↓
+                  hablar(texto)
+                        ↓
+                  ┌───────────┐
+                  │ Fish Audio│
+                  └─────┬─────┘
+                        ↓
+                  Audio generado
+                        ↓
+                    Pygame
+                        ↓
+               Voz de Kasane Teto
+                        ↕
+                VTube Studio API
+                        ↓
+              Movimiento de boca
 ```
+
+Este diseño mantiene las responsabilidades separadas: el intérprete decide qué hacer, el módulo de voz se ocupa de hablar y la integración con VTube Studio controla el avatar.
 
 ---
 
-## Futuro del proyecto
+## Variables de entorno y seguridad
 
-La arquitectura está pensada para poder agregar nuevas funcionalidades sin convertir `main.py` en un archivo demasiado grande.
+El proyecto utiliza un archivo `.env` para almacenar credenciales y otros valores que no deben incluirse directamente en el código fuente.
 
-Algunas funcionalidades que podrían incorporarse posteriormente:
+Ejemplo:
 
-* Reproducción y control de música.
-* Consulta del clima.
-* Búsquedas en Internet.
-* Control de YouTube.
-* Integración con servicios de música.
-* Consultas a Wikipedia.
-* Apertura y control de aplicaciones.
-* Control del volumen.
-* Gestión de archivos.
-* Recordatorios.
-* Conversaciones más naturales.
-* Mejor interpretación del lenguaje natural.
-* Respuestas más expresivas mediante las capacidades de Fish Audio.
-* Streaming de audio para reducir la latencia de respuesta.
-
-La estructura podría crecer de esta forma:
-
-```text
-comandos/
-├── hora.py
-├── fecha.py
-├── musica.py
-├── youtube.py
-├── spotify.py
-├── clima.py
-├── comida.py
-├── wikipedia.py
-├── navegador.py
-├── volumen.py
-├── archivos.py
-├── recordatorios.py
-└── sistema.py
+```dotenv
+FISH_API_KEY=tu_clave_de_fish_audio
+FISH_VOICE_ID=tu_identificador_de_voz
+FISH_MODEL=s2.1-pro-free
+VTS_AUTH_TOKEN=tu_token_de_vtube_studio
 ```
 
-La intención es que **cada nueva capacidad tenga su propio módulo**, manteniendo las responsabilidades separadas.
+Los valores anteriores son ejemplos. Deben sustituirse por las credenciales y los identificadores correspondientes a tu configuración.
+
+La URL de conexión con VTube Studio y otras opciones también pueden configurarse en `config.py`.
+
+**Nunca publiques las claves API ni el token de VTube Studio en un repositorio público.**
+
+### Archivo `.gitignore`
+
+Para evitar subir credenciales y archivos generados automáticamente, el archivo `.gitignore` debe incluir al menos:
+
+```gitignore
+# Variables de entorno y secretos
+.env
+.env.*
+
+# Excepción opcional para una plantilla sin secretos
+!.env.example
+
+# Caché de Python
+__pycache__/
+*.py[cod]
+
+# Entornos virtuales
+entorno/
+.venv/
+venv/
+
+# Archivos locales de editores
+.vscode/
+.idea/
+```
+
+Si utilizas una plantilla `.env.example`, debe contener únicamente nombres de variables y valores de ejemplo, nunca credenciales reales.
+
+Los directorios `__pycache__` y los archivos `.pyc` son generados automáticamente por Python. No es necesario incluirlos en el repositorio.
+
+---
+
+## Instalación
+
+Se recomienda utilizar un entorno virtual para mantener aisladas las dependencias del proyecto.
+
+Desde la carpeta raíz, en Windows con PowerShell:
+
+```powershell
+python -m venv entorno
+.\entorno\Scripts\Activate.ps1
+```
+
+Instala las dependencias utilizadas por los módulos del proyecto:
+
+```powershell
+pip install SpeechRecognition PyAudio fishaudio pygame websockets python-dotenv
+```
+
+La instalación de PyAudio puede requerir pasos adicionales según la versión de Python y el entorno de Windows.
+
+Si posteriormente se incorporan nuevas bibliotecas, conviene agregarlas a un archivo `requirements.txt` para facilitar la instalación del proyecto en otros equipos.
+
+Para generar ese archivo desde el entorno virtual activo:
+
+```powershell
+pip freeze > requirements.txt
+```
 
 ---
 
 ## Ejecución
 
-Para iniciar Meowchele:
+Antes de iniciar el asistente:
 
-```bash
+1. Activa el entorno virtual.
+2. Comprueba que el archivo `.env` tenga las variables necesarias.
+3. Inicia VTube Studio.
+4. Carga el modelo Live2D que deseas utilizar.
+5. Verifica que la API de VTube Studio esté disponible y que el token sea válido.
+6. Ejecuta el programa:
+
+```powershell
 python main.py
 ```
 
-Una vez iniciado, el asistente comenzará a escuchar mediante el micrófono.
+El asistente preparará el avatar, reproducirá el saludo inicial y comenzará el ciclo de escucha y ejecución de comandos.
 
-Por ejemplo:
-
-```text
-Meowchele:
-
-¡Meowchele-san! ¡Bienvenido! ¿Qué necesitas?
-
-Usuario:
-
-¿Qué hora es?
-
-Meowchele:
-
-Son las 8:30.
-```
-
-Para terminar el programa:
-
-```text
-Usuario:
-
-Salir
-
-Meowchele:
-
-Allí nos vidrios Meowchele-san.
-```
+Para terminar, utiliza el comando de salida definido en el intérprete o presiona `Ctrl+C`. El programa debe liberar el controlador de boca al finalizar.
 
 ---
 
-##  Estado del proyecto
+## Git y control de versiones
 
-** En desarrollo**
+Git permite mantener un historial de los cambios y experimentar con nuevas funcionalidades sin poner en riesgo la versión estable.
 
-Meowchele se encuentra en una etapa inicial de desarrollo. La arquitectura actual está enfocada en crear una base organizada sobre la cual puedan incorporarse nuevas funcionalidades progresivamente.
+Una organización posible es:
 
-Actualmente el proyecto ya cuenta con:
+- `main`: versión estable del asistente.
+- `develop`: integración de funcionalidades en desarrollo, si decides utilizar esta rama.
+- `feature/nombre`: ramas para implementar nuevas características.
+- `fix/nombre`: ramas para corregir errores.
 
-*  Reconocimiento de voz mediante micrófono.
-*  Interpretación básica mediante palabras clave.
-*  Consulta de la hora.
-*  Síntesis de voz mediante Fish Audio.
-*  Voz personalizada mediante un `reference_id`.
-*  Gestión de credenciales mediante variables de entorno.
-*  Arquitectura modular para agregar nuevos comandos.
+Por ejemplo, una futura mejora de sincronización labial podría desarrollarse en una rama como `feature/lip-sync`, probarse y después integrarse en la rama correspondiente.
 
+Los nombres de las ramas son una propuesta de organización; puedes adaptarlos a tu flujo de trabajo.
+
+---
+
+## Próximas mejoras
+
+La arquitectura está pensada para ampliar las capacidades del asistente sin concentrar toda la lógica en un solo archivo.
+
+Entre las funcionalidades previstas se encuentran:
+
+- Incorporar más comandos de voz.
+- Mejorar la interpretación del lenguaje natural.
+- Consultar la fecha y otros datos útiles.
+- Reproducir y controlar música.
+- Consultar el clima.
+- Buscar información en Internet y Wikipedia.
+- Controlar YouTube y otros servicios de música.
+- Abrir aplicaciones.
+- Controlar el volumen del sistema.
+- Gestionar archivos.
+- Incorporar recordatorios.
+- Mejorar el manejo de errores y las reconexiones.
+- Reducir la latencia entre la solicitud y la respuesta.
+- Implementar una sincronización labial más precisa.
+- Añadir respuestas y expresiones más dinámicas del avatar.
+- Mejorar las pruebas de los módulos y las integraciones.
+
+La intención es que cada nueva capacidad tenga su propio módulo y que las funcionalidades compartidas, como hablar o controlar el avatar, se mantengan centralizadas.
+
+---
+
+## Estado del proyecto
+
+**En desarrollo.**
+
+El proyecto ya cuenta con una base modular y con las siguientes capacidades implementadas o integradas:
+
+- Reconocimiento de voz mediante el micrófono.
+- Interpretación básica de comandos.
+- Síntesis de voz mediante Fish Audio.
+- Configuración de una voz personalizada.
+- Reproducción del audio generado mediante Pygame.
+- Gestión de credenciales mediante variables de entorno.
+- Conexión con VTube Studio.
+- Activación de hotkeys del avatar.
+- Movimiento de boca durante la reproducción de voz.
+- Separación de responsabilidades entre voz, comandos, intérprete e integraciones.
+
+Algunas funcionalidades adicionales, como los comandos de música, clima, comida y una sincronización labial más precisa, permanecen como objetivos de desarrollo.
+
+## Objetivo final
+
+Construir un asistente virtual modular en Python inspirado en **Kasane Teto**, capaz de escuchar, interpretar y responder a instrucciones mediante voz, mientras interactúa con un avatar Live2D.
+
+El proyecto sirve como una oportunidad para aprender y mejorar progresivamente la programación en Python, la gestión de audio, el consumo de API, la concurrencia y el diseño de aplicaciones mantenibles.

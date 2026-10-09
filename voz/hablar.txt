@@ -1,29 +1,30 @@
-# Importaciones
+# Importaciones:
 import os
 import tempfile
 import pygame
-
 from fishaudio import FishAudio
 from fishaudio.utils import save
-
-from config import FISH_API_KEY, FISH_VOICE_ID, FISH_MODEL
-
+from config import (
+    FISH_API_KEY, 
+    FISH_VOICE_ID, 
+    FISH_MODEL
+)
 from integraciones.vtube_studio import (
     iniciar_movimiento_boca,
     detener_movimiento_boca
 )
 
+# Inicializar Fish Audio una sola vez:
+cliente = FishAudio(api_key = FISH_API_KEY)
 
-# Inicializar Fish Audio una sola vez
-cliente = FishAudio(api_key=FISH_API_KEY)
-
-# Inicializar el reproductor una sola vez
+# Inicializar el reproductor una sola vez:
 pygame.mixer.init()
 
-
+# Funcion para que el asistente hable:
 def hablar(texto):
-    print("Kasane Teto:", texto)
+    print("Kasane Teto: ", texto)
 
+    # Manejo de errores respecto a Fish Audio
     if not FISH_API_KEY:
         print("Error: no se encontró FISH_API_KEY")
         return
@@ -33,50 +34,32 @@ def hablar(texto):
         return
 
     ruta_audio = None
-    movimiento_iniciado = False
 
     try:
         # Crear archivo temporal
-        archivo_temporal = tempfile.NamedTemporaryFile(
-            suffix=".mp3",
-            delete=False
-        )
+        archivo_temporal = tempfile.NamedTemporaryFile(suffix = ".mp3", delete = False)
 
         ruta_audio = archivo_temporal.name
         archivo_temporal.close()
 
-        # Generar voz
-        audio = cliente.tts.convert(
-            text=texto,
-            reference_id=FISH_VOICE_ID,
-            model=FISH_MODEL
-        )
+        # Generar audio con Fish Audio
+        audio = cliente.tts.convert(text = texto, reference_id = FISH_VOICE_ID, model = FISH_MODEL,)
 
-        # Guardar audio
+        # Guardar el audio
         save(audio, ruta_audio)
 
-        # Cargar audio antes de iniciar el movimiento
+        # Reproducir
         pygame.mixer.music.load(ruta_audio)
-
-        # Iniciar el movimiento de boca
-        iniciar_movimiento_boca()
-        movimiento_iniciado = True
-
-        # Reproducir voz
         pygame.mixer.music.play()
 
-        reloj = pygame.time.Clock()
-
+        # Esperar mientras se reproduce
         while pygame.mixer.music.get_busy():
-            reloj.tick(20)
+            pygame.time.Clock().tick(10)
 
     except Exception as error:
         print(f"Error con Fish Audio: {error}")
 
     finally:
-        # Asegurar que la boca se cierre al terminar
-        if movimiento_iniciado:
-            detener_movimiento_boca()
 
         # Limpiar el archivo temporal
         if ruta_audio and os.path.exists(ruta_audio):
@@ -84,3 +67,4 @@ def hablar(texto):
                 os.remove(ruta_audio)
             except OSError:
                 pass
+

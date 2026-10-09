@@ -3,6 +3,7 @@ from config import NAME_USER
 from voz.escuchar import escuchar
 from voz.hablar import hablar
 from core.interprete import ejecutar_comando
+from integraciones.vtube_studio import cerrar_control_boca
 from comandos.avatar import (
     eliminar_toggles,
     quitar_marca_de_agua,
@@ -27,17 +28,29 @@ def welcome():
 # Funcion principal:
 def main():
 
-    welcome()
+    try:
 
-    # Repetir para que el asistente siga escuchando:
-    while True:
+        welcome()
 
-        texto = escuchar()
+        # Repetir para que el asistente siga escuchando:
+        while True:
 
-        continuar = ejecutar_comando(texto)
+            texto = escuchar()
 
-        if not continuar:
-            break
+            continuar = ejecutar_comando(texto)
+
+            if not continuar:
+                break
+
+    except KeyboardInterrupt:
+
+        print("\nTeto se detuvo")
+
+    finally:
+
+        # Liberar conexion:
+        cerrar_control_boca()
+    
 
 
 if __name__ == "__main__":

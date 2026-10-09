@@ -1,0 +1,16 @@
+import time
+
+from integraciones.vtube_studio import (
+    iniciar_movimiento_boca,
+    detener_movimiento_boca
+)
+
+try:
+    print("Abriendo la boca...")
+    iniciar_movimiento_boca()
+
+    time.sleep(5)
+
+finally:
+    print("Cerrando la boca...")
+    detener_movimiento_boca()

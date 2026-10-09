@@ -17,18 +17,22 @@ def ejecutar_comando(texto):
 
     # Wikipedia
     if "busca en wikipedia" in texto:
+
         busqueda_wikipedia(texto)
 
     # Google:
     elif "busca en google" in texto:
+
         busqueda_google(texto)
 
     # Youtube
     elif "busca en youtube" in texto:
+
         busqueda_youtube(texto)
 
     # Chistes:
     elif "chiste" in texto or "chascarrillo" in texto:
+
         chiste()
 
     # Hora
@@ -43,10 +47,11 @@ def ejecutar_comando(texto):
 
     # Dia:
     elif "día" in texto or "dia" in texto:
+
         decir_dia()
 
     # Clima:
-    elif "clima" in texto:
+    elif "clima" in texto or "tiempo" in texto:
 
         consultar_clima()
 

@@ -5,8 +5,6 @@ from config import NAME_USER
 from comandos.avatar import (
     activar_rostro_oscuro,
     desactivar_rostro_oscuro,
-    activar_baguette,
-    desactivar_baguette,
     mareo,
     desactivar_mareo,
 )

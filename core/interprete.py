@@ -9,6 +9,10 @@ from comandos.google import busqueda_google
 from comandos.youtube import busqueda_youtube
 from comandos.chistes import chiste
 from comandos.captura import captura_pantalla
+from comandos.chibi import cambiar_escala
+from comandos.traje import cambiar_traje
+from comandos.albur import responder_albur
+from comandos.pan import quitar_pan, dar_pan
 from voz.hablar import hablar
 from comandos.avatar import (
     activar_baguette,
@@ -46,7 +50,6 @@ def ejecutar_comando(texto):
     # Wikipedia
     if "busca en wikipedia" in texto:
         # Ejecutar antes de la busqueda:
-        desactivar_baguette()
         ojos_estrella()
         activar_audifonos()
 
@@ -54,7 +57,6 @@ def ejecutar_comando(texto):
         busqueda_wikipedia(texto)
 
         # Ejecutar despues de la busqueda:
-        activar_baguette()
         desactivar_ojos_estrella()
         desactivar_audifonos()
 
@@ -105,12 +107,36 @@ def ejecutar_comando(texto):
 
         buscar_comida()
 
+    # Modo chibi:
+    elif "modo chibi" in texto or "modo Chibi" in texto:
+    
+        cambiar_escala()
+
+    # Cambiar traje:
+    elif "ropa" in texto or "cambia de traje" in texto:
+
+        cambiar_traje()
+
+    # Responder albur
+    elif "huevos" in texto:
+
+        responder_albur()
+
+    # Quitarle el pan:
+    elif "quitar pan" in texto or "dame el pan" in texto:
+
+        quitar_pan()
+
+    # Darle pan:
+    elif "ten un pan" in texto or "dar un pan" in texto or "devolver el pan" in texto or "dar pan" in texto:
+
+        dar_pan()
+
     # En caso de no tener comando alguno:
     else:
         # Acciones del modelo:
         mareo()
         activar_rostro_oscuro()
-        desactivar_baguette()
 
         # Respuesta:
         hablar("¡Oye! ¿Me viste cara de bola de cristal? No tengo esa función programada. "
@@ -119,6 +145,5 @@ def ejecutar_comando(texto):
         # Acciones del modelo:
         desactivar_mareo()
         desactivar_rostro_oscuro()
-        activar_baguette()
 
     return True

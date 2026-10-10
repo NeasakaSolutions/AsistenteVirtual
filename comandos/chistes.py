@@ -13,12 +13,7 @@ def chiste():
         hablar("Te advierto que mi sentido del humor es una amenaza para la humanidad, "
             f"{NAME_USER}. Ahí va este chiste horrendo... "
             f"{chiste_generado}"
-            "¡Ríete por compromiso o no te hablo en todo el día!")
-
-        #hablar(f"Atendiendo la solicitud de {NAME_USER}, "
-        #               "daremos inicio a la presentación del chiste programado para la jornada de hoy. "
-        #               "Advertimos que es de bajo presupuesto, pero se entrega con total transparencia. "
-        #               f"{chiste_generado}")
+            " ¡Ríete por compromiso o no te hablo en todo el día!")
 
     except Exception as error:
 

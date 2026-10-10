@@ -9,6 +9,8 @@ from comandos.avatar import (
     quitar_marca_de_agua,
     activar_baguette,
     cambiar_ropa,
+    ojos_corazon,
+    desactivar_ojos_corazon
 )
 
 # Inicializar el asistente:
@@ -18,12 +20,15 @@ def welcome():
     eliminar_toggles()
     quitar_marca_de_agua()
     cambiar_ropa()
-    activar_baguette()
+    ojos_corazon()
 
     hablar(
         f"¡Oha-teto, {NAME_USER}! ¡Dejemos el pan a un lado por un segundo! "
         " ¿Qué se te ofrece? ¿Quieres escuchar buena música o necesitas que busque algo por ti?"
     )
+
+    # Acciones del modelo:
+    desactivar_ojos_corazon()
 
 # Funcion principal:
 def main():

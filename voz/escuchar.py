@@ -2,6 +2,14 @@
 import speech_recognition as sr
 from config import (IDIOMA, TIEMPO_ESCUCHA, PAUSE_THRESHOLD)
 from voz.hablar import hablar
+from comandos.avatar import (
+    mareo,
+    desactivar_mareo,
+    activar_baguette,
+    desactivar_baguette,
+    activar_rostro_oscuro,
+    desactivar_rostro_oscuro
+)
 
 # Variables de inicializacion:
 listener = sr.Recognizer()
@@ -30,11 +38,31 @@ def escuchar():
 
         except sr.UnknownValueError:
 
+            # Acciones del modelo:
+            activar_rostro_oscuro()
+            desactivar_baguette()
+            mareo()
+
             print("No entendí el mensaje")
             hablar("Eh... ¿eso era idioma humano o qué? "
                    " No te entendí nada. ¡A ver, dímelo otra vez, pero despacio!")
 
+            # Acciones del modelo:
+            desactivar_rostro_oscuro()
+            desactivar_mareo()
+            activar_baguette()
+
         except sr.RequestError as error:
+
+             # Acciones del modelo:
+            activar_rostro_oscuro()
+            desactivar_baguette()
+            mareo()
 
             print("Error con el reconocimiento:", error)
             hablar("Hay un problema con el reconocimiento")
+
+            # Acciones del modelo:
+            desactivar_rostro_oscuro()
+            desactivar_mareo()
+            activar_baguette()

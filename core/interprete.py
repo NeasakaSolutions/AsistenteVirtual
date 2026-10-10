@@ -10,6 +10,33 @@ from comandos.youtube import busqueda_youtube
 from comandos.chistes import chiste
 from comandos.captura import captura_pantalla
 from voz.hablar import hablar
+from comandos.avatar import (
+    activar_baguette,
+    desactivar_baguette,
+    cambiar_ropa,
+    activar_microfono,
+    desactivar_microfono,
+    activar_audifonos,
+    desactivar_audifonos,
+    activar_rostro_oscuro,
+    desactivar_rostro_oscuro,
+    ojos_oscuros,
+    desactivar_ojos_oscuros,
+    sonrojar,
+    desactivar_sonrojar,
+    ojos_corazon,
+    desactivar_ojos_corazon,
+    ojos_estrella,
+    desactivar_ojos_estrella,
+    ojos_entrecerrados,
+    desactivar_ojos_entrecerrados,
+    modo_chibi,
+    desactivar_modo_chibi,
+    llorar,
+    desactivar_llorar,
+    mareo,
+    desactivar_mareo
+    )
 
 # Reconocer las palabras clave para las funciones:
 def ejecutar_comando(texto):
@@ -18,12 +45,24 @@ def ejecutar_comando(texto):
 
     # Wikipedia
     if "busca en wikipedia" in texto:
+        # Ejecutar antes de la busqueda:
+        desactivar_baguette()
+        ojos_estrella()
+        activar_audifonos()
 
+        # Busqueda en wikipedia:
         busqueda_wikipedia(texto)
+
+        # Ejecutar despues de la busqueda:
+        activar_baguette()
+        desactivar_ojos_estrella()
+        desactivar_audifonos()
 
     # Google:
     elif "busca en google" in texto:
+        # Ejecutar antes de la busqueda:
 
+        # Realizar busqueda:
         busqueda_google(texto)
 
     # Youtube
@@ -68,8 +107,18 @@ def ejecutar_comando(texto):
 
     # En caso de no tener comando alguno:
     else:
+        # Acciones del modelo:
+        mareo()
+        activar_rostro_oscuro()
+        desactivar_baguette()
 
+        # Respuesta:
         hablar("¡Oye! ¿Me viste cara de bola de cristal? No tengo esa función programada. "
                "Revisa bien tus comandos antes de pedirme cosas imposibles.")
+
+        # Acciones del modelo:
+        desactivar_mareo()
+        desactivar_rostro_oscuro()
+        activar_baguette()
 
     return True

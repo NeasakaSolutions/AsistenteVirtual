@@ -2,6 +2,14 @@
 import wikipedia
 from voz.hablar import hablar
 from config import NAME_USER
+from comandos.avatar import (
+    activar_rostro_oscuro,
+    desactivar_rostro_oscuro,
+    activar_baguette,
+    desactivar_baguette,
+    mareo,
+    desactivar_mareo,
+)
 
 #Configuracion para la api de wikipedia:
 wikipedia.set_lang("es")
@@ -25,8 +33,17 @@ def busqueda_wikipedia(busca):
 
     # Comprobar si el usuario no especificó qué buscar 
     if not busca: 
+        # Ejecutar acciones del modelo:
+        mareo()
+        activar_rostro_oscuro()
+
         hablar( f"¿Qué quieres que busque en Wikipedia, {NAME_USER}? "
                 "¡No puedo leer tu mente todavía!" ) 
+
+        # Ejecutar acciones del modelo:
+        desactivar_mareo()
+        desactivar_rostro_oscuro()
+
         return
     
     try:
@@ -40,28 +57,63 @@ def busqueda_wikipedia(busca):
         )
 
     except wikipedia.exceptions.DisambiguationError:
+
+        # Ejecutar acciones del modelo:
+        mareo()
+        activar_rostro_oscuro()
+
         hablar(
             f"¡Ayyy, {NAME_USER}! Encontré demasiadas cosas sobre '{busca}'. "
             f"¡No me hagas adivinar! Sé más específico con lo que buscas."
         )
 
+        # Ejecutar acciones del modelo:
+        desactivar_mareo()
+        desactivar_rostro_oscuro()
+
     except wikipedia.exceptions.PageError:
+
+        # Acciones del modelo:
+        mareo()
+        activar_rostro_oscuro()
+
         hablar(
             f"¿Eh? Busqué por todos lados y no encontré nada sobre '{busca}'. "
             f"¡Seguro ni existe o lo dijiste mal, {NAME_USER}!"
         )
 
+        # Acciones del modelo:
+        desactivar_mareo()
+        desactivar_rostro_oscuro()
+
     except wikipedia.exceptions.HTTPTimeoutError:
+
+        # Ejecutar acciones del modelo:
+        mareo()
+        activar_rostro_oscuro()
+
         hablar(
             "¡Aaaah, qué lentitud! Wikipedia se tardó un siglo en responder. "
             "¡Mi paciencia y mi baguette tienen límite! Inténtalo otra vez."
         )
 
+        # Ejecutar acciones del modelo:
+        desactivar_mareo()
+        desactivar_rostro_oscuro()
+
     except Exception as error:
         print(f"Error con Wikipedia: {error}")
+
+        # Ejecutar acciones del modelo:
+        mareo()
+        activar_rostro_oscuro()
 
         hablar(
             "¡Oye, ocurrió un error rarísimo! Algo falló en la búsqueda... "
             "¡Seguro fue culpa de Miku o de mi conexión!"
         )
+
+        # Ejecutar acciones del modelo:
+        desactivar_mareo()
+        desactivar_rostro_oscuro()
     

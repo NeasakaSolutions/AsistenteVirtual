@@ -1,4 +1,5 @@
 # Importaciones:
+import time
 from integraciones.vtube_studio import activar_hotkey
 from config import (
     VTS_HK_ELIMINAR_TODOS_LOS_TOGGLES,
@@ -83,7 +84,7 @@ def activar_audifonos():
     return activar_accion(VTS_HK_AURICULARES, "Activar audifonos.")
 
 # Desactivar audifonos:
-def activar_audifonos():
+def desactivar_audifonos():
 
     return activar_accion(VTS_HK_AURICULARES, "Desactivar audifonos")
 
@@ -180,4 +181,6 @@ def mareo():
 def desactivar_mareo():
 
     return activar_accion(VTS_HK_OJOS_MAREADOS, "Desactivar mareo")
+
+
 

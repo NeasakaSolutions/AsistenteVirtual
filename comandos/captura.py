@@ -4,6 +4,7 @@ import datetime
 from config import CARPETA_CAPTURAS
 from pathlib import Path
 from config import NAME_USER
+from comandos.avatar import ojos_estrella,desactivar_ojos_estrella
 from voz.hablar import hablar
 
 # Funcion para realizar captura de pantalla:
@@ -27,6 +28,9 @@ def captura_pantalla():
         captura = pyautogui.screenshot()
         captura.save(ruta_captura)
 
+        # Acciones del modelo:
+        ojos_estrella()
+
         # Asistente aviso:
         hablar(
             "¡Click! Teto-sama ha congelado tu pantalla con éxito."
@@ -35,6 +39,9 @@ def captura_pantalla():
 
         # Debug:
         print(f"Captura guardada con exito en: {ruta_captura}")
+
+        # Acciones del modelo:
+        desactivar_ojos_estrella()
 
     except Exception as error:
 

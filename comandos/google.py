@@ -2,6 +2,14 @@
 import pywhatkit
 from voz.hablar import hablar
 from config import NAME_USER
+from comandos.avatar import (
+    ojos_estrella,
+    desactivar_ojos_estrella,
+    activar_audifonos,
+    desactivar_audifonos,
+    mareo,
+    desactivar_mareo,
+)
 
 # Funcion para que no arroje tantos caracteres
 def limitar_texto(texto, max_caracteres=400):
@@ -19,28 +27,49 @@ def busqueda_google(busca):
 
     # Comprobar que el usuario especifico la busqueda:
     if not busca:
+
+        # Acciones del modelo:
+        mareo()
+
         hablar(
             f"¿Y qué se supone que debo buscar, {NAME_USER}? " 
             "¡Mis poderes de Teto-sama no leen la mente!"
         )
 
+        # Acciones del modelo:
+        desactivar_mareo()
+
         return
 
     try:
 
+        # Acciones del modelo:
+        ojos_estrella()
+        activar_audifonos()
+
         # Respuesta del asistente:
-        hablar(f"¿Eh? Busqué por todos lados y no encontré nada sobre '{busca}'. "
-                    f"¡Seguro ni existe o lo dijiste mal, {NAME_USER}!")
+        hablar(f"¡Aquí tienes, {NAME_USER}! Teto-sama encontró justo lo que buscabas sobre '{busca}'. "
+               "¡Agradece que soy la mejor buscando en internet!")
 
         # Realizar busqueda:
         pywhatkit.search(busca)
+
+        # Acciones modelo:
+        desactivar_ojos_estrella()
+        desactivar_audifonos()
 
     except Exception as error:
 
         # Debugin:
         print(f"Error con la busqueda en google: {error}")
 
+        # Acciones del modelo:
+        mareo()
+
         hablar("¡Oye, ocurrió un error rarísimo! Algo falló en la búsqueda... "
             "¡Seguro fue culpa de Miku o de mi conexión!")
+
+        # Acciones del modelo:
+        desactivar_mareo()
 
 

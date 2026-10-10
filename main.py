@@ -7,7 +7,6 @@ from integraciones.vtube_studio import cerrar_control_boca
 from comandos.avatar import (
     eliminar_toggles,
     quitar_marca_de_agua,
-    activar_baguette,
     cambiar_ropa,
     ojos_corazon,
     desactivar_ojos_corazon

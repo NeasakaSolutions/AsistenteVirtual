@@ -2,6 +2,16 @@
 import requests
 from config import WEATHER_API_KEY, LAT, LON, NAME_USER
 from voz.hablar import hablar
+from comandos.avatar import (
+     activar_audifonos,
+     desactivar_audifonos,
+     ojos_estrella,
+     desactivar_ojos_estrella,
+     mareo,
+     desactivar_mareo,
+     activar_rostro_oscuro,
+     desactivar_rostro_oscuro
+)
 
 # Funcion principal:
 def consultar_clima():
@@ -39,30 +49,64 @@ def consultar_clima():
          "¡Agradece que la Diva Teto te mantiene informado!"
           )
 
+          # Acciones del modelo:
+          ojos_estrella()
+          activar_audifonos()
+
+          # Respuesta del modelo:
           hablar(mensaje)
+
+          # Acciones del modelo:
+          desactivar_ojos_estrella()
+          desactivar_audifonos()
 
      except requests.exceptions.Timeout:
 
           # Debug:
           print("Error : La consulta excedio el tiempo de espera.")
 
+          # Acciones del modelo:
+          activar_audifonos()
+          mareo()
+          activar_rostro_oscuro()
+
           hablar("¡Oye, esto no avanza! La consulta se congeló... "
              f"¡Seguro Miku nos saturó la red! Dame un segundo e inténtalo otra vez, {NAME_USER}.")
+
+          # Acciones del modelo:
+          desactivar_audifonos()
+          desactivar_mareo()
+          desactivar_rostro_oscuro()
 
      except requests.exceptions.RequestException as error:
 
           print(f"Error al consultar el clima: {error}")
 
+          # Acciones del modelo:
+          activar_audifonos()
+          mareo()
+          activar_rostro_oscuro()
+          
           hablar(
                "¡Agh! Sin conexión con el servicio meteorológico... "
                "¡El clima le tiene miedo a Teto-sama o seguro el servidor se cayó por culpa de Miku! "\
                f"No pude conseguir nada, {NAME_USER}."
           )
 
+          # Acciones del modelo:
+          desactivar_audifonos()
+          desactivar_mareo()
+          desactivar_rostro_oscuro()
+
      except (KeyError, IndexError, ValueError) as error:
 
           # Debug:
           print(f"Error al interpretar los datos del clima: {error}")
+
+          # Acciones del modelo:
+          activar_audifonos()
+          mareo()
+          activar_rostro_oscuro()
 
           hablar(
                "¡Ayyy, qué código tan extraño!"
@@ -70,7 +114,9 @@ def consultar_clima():
                f"¡Prueba otra vez, {NAME_USER}!"
           )
 
-    #datos = requests.get(f"https://api.openweathermap.org/data/4.0/onecall/current?lat={LAT}&lon={LON}&appid={WEATHER_API_KEY}")
-    #temperatura = datos['main']['temp']
-    #clima = datos['weather'][0]['description']
+          # Acciones del modelo:
+          desactivar_audifonos()
+          desactivar_mareo()
+          desactivar_rostro_oscuro()
+
 

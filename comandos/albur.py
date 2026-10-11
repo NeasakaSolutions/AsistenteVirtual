@@ -9,42 +9,32 @@ from comandos.avatar import (
     desactivar_ojos_oscuros
 )
 
-# Respuestas de teto:
-RESPUESTAS_ALBUR = [
-    (
-        f"¡Ésos te los comes, {NAME_USER}! "
-        "Y de paso me traes un baguette de la panadería. "
-        "¡Con Teto-sama no te andes llevando así, insolente!"
-    ),
-    (
-        f"¡Con catsup o en omelette, pero te los cenas enteros, {NAME_USER}! "
-        "A ver si así se te quita lo chistoso..."
-    ),
-    (
-        f"¡Con los que te atragantas, {NAME_USER}! "
-        "Te los sirvo en plato de plata a ver si no te me ahogas, "
-        "¡mensote!"
-    )
-]
 
-RESPUESTAS_ALV = [
-    (
-        f"¡¿A DÓNDE DICES?! ¡A la verga te vas a ir tú, grosero! "
-        "¡A Teto-sama nadie le habla así!"
-        " ¡Agradece que soy un programa y no te puedo lanzar un baguette en la cara!"
-    ),
-    (
-        f"¡Qué elegancia la tuya, {NAME_USER}! "
-        " ¡Qué falta de respeto para una Diva de mi calibre! Me voy a mi rincón a comer mi pan y ni pienses que te voy a pedir perdón."
-    ),
-    (
-        f"¡Órale! ¡Mucho pico y poca acción, {NAME_USER}! "
-        " Te me vas calmando o te borro el historial de la compu para que aprendas a respetar a Teto-sama."
-    )
-]
+
+
 
 # Funcion para respoder el albur:
-def responder_albur():
+def responder_albur(usuario = None):
+
+    nombre = usuario or NAME_USER
+
+    # Respuestas de teto:
+    RESPUESTAS_ALBUR = [
+        (
+            f"¡Ésos te los comes, {nombre}! "
+            "Y de paso me traes un baguette de la panadería. "
+            "¡Con Teto-sama no te andes llevando así, insolente!"
+        ),
+        (
+            f"¡Con catsup o en omelette, pero te los cenas enteros, {nombre}! "
+            "A ver si así se te quita lo chistoso..."
+        ),
+        (
+            f"¡Con los que te atragantas, {nombre}! "
+            "Te los sirvo en plato de plata a ver si no te me ahogas, "
+            "¡mensote!"
+        )
+    ]
 
     #  Acciones del modelo:
     ojos_oscuros()
@@ -61,7 +51,25 @@ def responder_albur():
     desactivar_ojos_oscuros()
 
 # Funcion para respoder cuando la mandan alv
-def responder_alv():
+def responder_alv(usuario = None):
+
+    nombre = usuario or NAME_USER
+
+    RESPUESTAS_ALV = [
+        (
+            f"¡¿A DÓNDE DICES?! ¡A la verga te vas a ir tú, grosero! "
+            "¡A Teto-sama nadie le habla así!"
+            " ¡Agradece que soy un programa y no te puedo lanzar un baguette en la cara!"
+        ),
+        (
+            f"¡Qué elegancia la tuya, {nombre}! "
+            " ¡Qué falta de respeto para una Diva de mi calibre! Me voy a mi rincón a comer mi pan y ni pienses que te voy a pedir perdón."
+        ),
+        (
+            f"¡Órale! ¡Mucho pico y poca acción, {nombre}! "
+            " Te me vas calmando o te borro el historial de la compu para que aprendas a respetar a Teto-sama."
+        )
+    ]
 
     #  Acciones del modelo:
     ojos_oscuros()

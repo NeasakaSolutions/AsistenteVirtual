@@ -17,6 +17,12 @@ LAT = os.getenv("LAT_LOCATION")
 LON = os.getenv("LON_LOCATION")
 CARPETA_CAPTURAS="CapturasTeto"
 
+# Leer chat de twitch:
+TWITCH_TOKEN = os.getenv("TWITCH_TOKEN")
+TWITCH_CHANNEL = os.getenv("TWITCH_CHANNEL")
+TWITCH_LEER_CHAT = os.getenv("TWITCH_LEER_CHAT", "true").strip().lower() in ("true", "1", "yes", "si")
+TWITCH_DELAY_LECTURA = 3
+
 # Reconocimiento de voz:
 IDIOMA = "es-US"
 #VELOCIDAD_VOZ = 200

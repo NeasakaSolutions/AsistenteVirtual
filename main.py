@@ -1,4 +1,3 @@
-# Importaciones:
 from config import NAME_USER
 from voz.escuchar import escuchar
 from voz.hablar import hablar
@@ -12,34 +11,40 @@ from comandos.avatar import (
     desactivar_ojos_corazon
 )
 
-# Inicializar el asistente:
-def welcome():
 
-    # Preparar modelo:
+def welcome():
+    # Preparar el modelo
     eliminar_toggles()
     quitar_marca_de_agua()
     cambiar_ropa()
     ojos_corazon()
 
-    hablar(
-        f"¡Oha-teto, {NAME_USER}! ¡Dejemos el pan a un lado por un segundo! "
-        " ¿Qué se te ofrece? ¿Quieres escuchar buena música o necesitas que busque algo por ti?"
-    )
-
-    # Acciones del modelo:
-    desactivar_ojos_corazon()
-
-# Funcion principal:
-def main():
-
     try:
+        hablar(
+            f"¡Oha-teto, {NAME_USER}! ¡Dejemos el pan a un lado "
+            "por un segundo. ¿Qué se te ofrece? "
+            "¿Quieres escuchar buena música o necesitas "
+            "que busque algo por ti?"
+        )
+    finally:
+        desactivar_ojos_corazon()
 
+
+def ejecutar_asistente(detener_evento=None):
+    try:
         welcome()
 
-        # Repetir para que el asistente siga escuchando:
-        while True:
+        while (
+            detener_evento is None
+            or not detener_evento.is_set()
+        ):
+            texto = escuchar(detener_evento)
 
-            texto = escuchar()
+            if detener_evento and detener_evento.is_set():
+                break
+
+            if not texto:
+                continue
 
             continuar = ejecutar_comando(texto)
 
@@ -47,18 +52,15 @@ def main():
                 break
 
     except KeyboardInterrupt:
-
-        print("\nTeto se detuvo")
+        print("\nKasane Teto se detuvo.")
 
     finally:
-
-        # Liberar conexion:
         cerrar_control_boca()
-    
+
+
+def main():
+    ejecutar_asistente()
 
 
 if __name__ == "__main__":
     main()
-
-
-

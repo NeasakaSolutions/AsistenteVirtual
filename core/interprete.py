@@ -41,111 +41,110 @@ from comandos.avatar import (
     desactivar_mareo
     )
 
-# Reconocer las palabras clave para las funciones:
+# Comandos de voz
 def ejecutar_comando(texto):
-
     if not texto:
-
         return True
 
     texto = texto.lower().strip()
 
-    if "kasane" not in texto and "casani" not in texto:
+    # Comprobar si mencionaron a Kasane.
+    nombres = ("kasane", "casane", "casani", "kasani")
 
+    if not any(nombre in texto for nombre in nombres):
         return True
 
     # Wikipedia
     if "busca en wikipedia" in texto:
-        # Ejecutar antes de la busqueda:
         ojos_estrella()
         activar_audifonos()
 
-        # Busqueda en wikipedia:
-        busqueda_wikipedia(texto)
+        try:
+            busqueda_wikipedia(texto)
+        finally:
+            desactivar_ojos_estrella()
+            desactivar_audifonos()
 
-        # Ejecutar despues de la busqueda:
-        desactivar_ojos_estrella()
-        desactivar_audifonos()
-
-    # Google:
+    # Google
     elif "busca en google" in texto:
-        # Ejecutar antes de la busqueda:
-
-        # Realizar busqueda:
         busqueda_google(texto)
 
-    # Youtube
+    # YouTube
     elif "busca en youtube" in texto:
-
         busqueda_youtube(texto)
 
-    # Captura de pantalla:
+    # Captura de pantalla
     elif "captura de pantalla" in texto or "screenshot" in texto:
-
         captura_pantalla()
 
-    # Chistes:
+    # Chistes
     elif "chiste" in texto or "chascarrillo" in texto:
-
         chiste()
 
     # Hora
     elif "hora" in texto:
-
         decir_hora()
 
     # Despedida
-    elif "salir" in texto or "voy" in texto:
-
+    elif any(frase in texto for frase in (
+        "me voy",
+        "ya me voy",
+        "adios",
+        "adiós",
+        "hasta luego",
+        "nos vemos",
+        "termina",
+        "detente",
+        "salir",
+    )) or texto.endswith("salir") or texto.endswith("nos vemos"):
         return salir()
 
-    # Dia:
+    # Día
     elif "día" in texto or "dia" in texto:
-
         decir_dia()
 
-    # Clima:
+    # Clima
     elif "clima" in texto or "tiempo" in texto:
-
         consultar_clima()
 
-    # Modo chibi:
-    elif "modo chibi" in texto or "modo Chibi" in texto:
-        
+    # Modo chibi
+    elif "modo chibi" in texto:
         cambiar_escala()
 
-    # Cambiar traje:
+    # Cambiar traje
     elif "ropa" in texto or "cambia de traje" in texto:
-
         cambiar_traje()
 
     # Responder albur
     elif "huevos" in texto:
-
         responder_albur()
 
-    # Quitarle el pan:
+    # Quitar el pan
     elif "quitar pan" in texto or "dame el pan" in texto:
-
         quitar_pan()
 
-    # Darle pan:
-    elif "ten un pan" in texto or "dar un pan" in texto or "devolver el pan" in texto or "dar pan" in texto:
-
+    # Dar pan
+    elif any(frase in texto for frase in (
+        "ten un pan",
+        "dar un pan",
+        "devolver el pan",
+        "dar pan",
+    )):
         dar_pan()
 
-    # En caso de no tener comando alguno:
+    # Comando no reconocido
     else:
-        # Acciones del modelo:
         mareo()
         activar_rostro_oscuro()
 
-        # Respuesta:
-        hablar("¡Oye! ¿Me viste cara de bola de cristal? No tengo esa función programada. "
-                "Revisa bien tus comandos antes de pedirme cosas imposibles.")
-
-        # Acciones del modelo:
-        desactivar_mareo()
-        desactivar_rostro_oscuro()
+        try:
+            hablar(
+                "¡Oye! ¿Me viste cara de bola de cristal? "
+                "No tengo esa función programada. "
+                "Revisa bien tus comandos antes de pedirme cosas imposibles."
+            )
+        finally:
+            desactivar_mareo()
+            desactivar_rostro_oscuro()
 
     return True

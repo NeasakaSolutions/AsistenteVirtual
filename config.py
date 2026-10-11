@@ -1,8 +1,15 @@
 # Importaciones:
 import os
+import sys
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+if getattr(sys, "frozen", False):
+    CARPETA_BASE = Path(sys.executable).resolve().parent
+else:
+    CARPETA_BASE = Path(__file__).resolve().parent
+
+load_dotenv(CARPETA_BASE / ".env")
 
 # Datos de usuario:
 NAME_USER = "Meowchele-san"

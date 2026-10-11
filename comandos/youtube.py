@@ -21,6 +21,10 @@ def busqueda_youtube(busca):
 
     # Eliminar el nombre del asistente y el comando
     busca = busca.replace("kasane", "")
+    busca = busca.replace("kasane teto", "")
+    busca = busca.replace("casane", "")
+    busca = busca.replace("casani", "")
+    busca = busca.replace("kasani", "")
     busca = busca.replace("busca en youtube", "")
     busca = busca.replace("buscar en youtube", "")
 

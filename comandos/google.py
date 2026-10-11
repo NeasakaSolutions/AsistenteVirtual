@@ -1,7 +1,9 @@
-# Importaciones:
+# Importaciones
 import pywhatkit
+
 from voz.hablar import hablar
 from config import NAME_USER
+
 from comandos.avatar import (
     ojos_estrella,
     desactivar_ojos_estrella,
@@ -11,65 +13,81 @@ from comandos.avatar import (
     desactivar_mareo,
 )
 
-# Funcion para que no arroje tantos caracteres
+
 def limitar_texto(texto, max_caracteres=400):
-    # Limita la respuesta para evitar que el asistente hable demasiado.
     if len(texto) <= max_caracteres:
         return texto
 
     return texto[:max_caracteres].rsplit(" ", 1)[0] + "..."
 
-# Funcion paralabusqueda en google:
+
 def busqueda_google(busca):
+    # Normalizar el texto
+    busca = busca.lower().strip()
 
-    # Formatear el texto:
-    busca = busca.replace("busca en google", "").strip()
+    # Eliminar variantes del nombre del asistente
+    busca = busca.replace("kasane teto", "")
+    busca = busca.replace("kasane", "")
+    busca = busca.replace("casane", "")
+    busca = busca.replace("casani", "")
+    busca = busca.replace("kasani", "")
 
-    # Comprobar que el usuario especifico la busqueda:
+    # Eliminar el comando de búsqueda
+    busca = busca.replace("busca en google", "")
+    busca = busca.replace("buscar en google", "")
+
+    # Limpiar espacios sobrantes
+    busca = " ".join(busca.split())
+
     if not busca:
-
-        # Acciones del modelo:
-        mareo()
-
-        hablar(
-            f"¿Y qué se supone que debo buscar, {NAME_USER}? " 
-            "¡Mis poderes de Teto-sama no leen la mente!"
-        )
-
-        # Acciones del modelo:
-        desactivar_mareo()
+        try:
+            mareo()
+            hablar(
+                f"¿Qué quieres que busque, {NAME_USER}? "
+                "¡Mis poderes no leen la mente!"
+            )
+        finally:
+            desactivar_mareo()
 
         return
 
+    # Activar las acciones del modelo
     try:
-
-        # Acciones del modelo:
         ojos_estrella()
         activar_audifonos()
 
-        # Respuesta del asistente:
-        hablar(f"¡Aquí tienes, {NAME_USER}! Teto-sama encontró justo lo que buscabas sobre '{busca}'. "
-               "¡Agradece que soy la mejor buscando en internet!")
-
-        # Realizar busqueda:
-        pywhatkit.search(busca)
-
-        # Acciones modelo:
-        desactivar_ojos_estrella()
-        desactivar_audifonos()
+        hablar(
+            f"¡Aquí tienes, {NAME_USER}! "
+            f"Teto-sama encontró justo lo que buscabas sobre "
+            f"'{busca}'. ¡Soy la mejor buscando en internet!"
+        )
 
     except Exception as error:
+        print(f"Error al anunciar la búsqueda: {error}")
 
-        # Debugin:
-        print(f"Error con la busqueda en google: {error}")
+    finally:
+        try:
+            desactivar_ojos_estrella()
+        except Exception as error:
+            print(f"Error al desactivar los ojos de estrella: {error}")
 
-        # Acciones del modelo:
-        mareo()
+        try:
+            desactivar_audifonos()
+        except Exception as error:
+            print(f"Error al desactivar los audífonos: {error}")
 
-        hablar("¡Oye, ocurrió un error rarísimo! Algo falló en la búsqueda... "
-            "¡Seguro fue culpa de Miku o de mi conexión!")
+    # Buscar en Google
+    try:
+        pywhatkit.search(busca)
 
-        # Acciones del modelo:
-        desactivar_mareo()
+    except Exception as error:
+        print(f"Error con la búsqueda en Google: {error}")
 
-
+        try:
+            mareo()
+            hablar(
+                "¡Ocurrió un error al buscar en Google! "
+                "Revisa tu conexión e inténtalo de nuevo."
+            )
+        finally:
+            desactivar_mareo()

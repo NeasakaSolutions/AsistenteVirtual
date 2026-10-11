@@ -2,7 +2,6 @@
 from comandos.hora import decir_hora
 from comandos.sistema import salir
 from comandos.clima import consultar_clima
-from comandos.comida import buscar_comida
 from comandos.dia import decir_dia
 from comandos.wikipedia import busqueda_wikipedia
 from comandos.google import busqueda_google
@@ -45,7 +44,15 @@ from comandos.avatar import (
 # Reconocer las palabras clave para las funciones:
 def ejecutar_comando(texto):
 
-    #print(f"[DEBUG] Comando recibido: {texto}") # Debugin
+    if not texto:
+
+        return True
+
+    texto = texto.lower().strip()
+
+    if "kasane" not in texto and "casani" not in texto:
+
+        return True
 
     # Wikipedia
     if "busca en wikipedia" in texto:
@@ -102,14 +109,9 @@ def ejecutar_comando(texto):
 
         consultar_clima()
 
-    # Comida
-    elif "comida" in texto:
-
-        buscar_comida()
-
     # Modo chibi:
     elif "modo chibi" in texto or "modo Chibi" in texto:
-    
+        
         cambiar_escala()
 
     # Cambiar traje:
@@ -140,7 +142,7 @@ def ejecutar_comando(texto):
 
         # Respuesta:
         hablar("¡Oye! ¿Me viste cara de bola de cristal? No tengo esa función programada. "
-               "Revisa bien tus comandos antes de pedirme cosas imposibles.")
+                "Revisa bien tus comandos antes de pedirme cosas imposibles.")
 
         # Acciones del modelo:
         desactivar_mareo()

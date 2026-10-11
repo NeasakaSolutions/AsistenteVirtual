@@ -10,7 +10,13 @@ from comandos.chistes import chiste
 from comandos.captura import captura_pantalla
 from comandos.chibi import cambiar_escala
 from comandos.traje import cambiar_traje
-from comandos.albur import responder_albur
+from comandos.albur import (
+    responder_albur,
+    responder_alv
+)
+from comandos.insultos import (
+    insultar_kotori
+)
 from comandos.pan import quitar_pan, dar_pan
 from voz.hablar import hablar
 from comandos.avatar import (
@@ -49,7 +55,7 @@ def ejecutar_comando(texto):
     texto = texto.lower().strip()
 
     # Comprobar si mencionaron a Kasane.
-    nombres = ("kasane", "casane", "casani", "kasani")
+    nombres = ("rox", "rocs", "roks", "ros", "roz", "rocks", "fox")
 
     if not any(nombre in texto for nombre in nombres):
         return True
@@ -118,6 +124,14 @@ def ejecutar_comando(texto):
     # Responder albur
     elif "huevos" in texto:
         responder_albur()
+
+    # responder alv:
+    elif "verga" in texto or "vete a la" in texto:
+        responder_alv()
+
+    # Insultar a Kotori:
+    elif "kotori" in texto:
+        insultar_kotori()
 
     # Quitar el pan
     elif "quitar pan" in texto or "dame el pan" in texto:

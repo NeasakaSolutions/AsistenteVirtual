@@ -26,11 +26,13 @@ def busqueda_google(busca):
     busca = busca.lower().strip()
 
     # Eliminar variantes del nombre del asistente
-    busca = busca.replace("kasane teto", "")
-    busca = busca.replace("kasane", "")
-    busca = busca.replace("casane", "")
-    busca = busca.replace("casani", "")
-    busca = busca.replace("kasani", "")
+    busca = busca.replace("rox", "")
+    busca = busca.replace("rocs", "")
+    busca = busca.replace("roks", "")
+    busca = busca.replace("ros", "")
+    busca = busca.replace("roz", "")
+    busca = busca.replace("rocks", "")
+    busca = busca.replace("fox", "")
 
     # Eliminar el comando de búsqueda
     busca = busca.replace("busca en google", "")

@@ -5,10 +5,14 @@ from twitchio.ext import commands
 from config import TWITCH_TOKEN, TWITCH_CHANNEL, TWITCH_LEER_CHAT
 from voz.hablar import hablar
 from comandos.hora import decir_hora
-from comandos.chistes import chiste
 from comandos.chibi import cambiar_escala
 from comandos.pan import dar_pan, quitar_pan
-from comandos.traje import cambiar_traje
+from comandos_twitch.traje import cambiar_traje
+from integraciones.youtube_music import gestor_musica
+from comandos_twitch.chistes import (
+    chiste,
+    chiste_negro
+)
 from comandos.albur import (
     responder_albur,
     responder_alv,
@@ -35,7 +39,8 @@ from comandos.avatar import (
 
 # Clase de kasane para leer el chat:
 class KasaneTwitchBot(commands.Bot):
-    
+
+    # Validar el token disponible:
     def __init__(self):
         if not TWITCH_TOKEN or not TWITCH_CHANNEL:
             raise RuntimeError(
@@ -56,7 +61,11 @@ class KasaneTwitchBot(commands.Bot):
         self.intervalo_lectura = 3.0
         self.intervalo_comando = 3.0
 
+        # Comando disponibles:
         self.comandos = {
+            # !music nombre de la cancion
+            # !queu [muestra la cola de las canciones]
+            # !skip [skipea una cancion]
             "!alv": responder_alv,
             "!huevos": responder_albur,
             "!meowchele": insultar_meowchele,
@@ -65,6 +74,7 @@ class KasaneTwitchBot(commands.Bot):
             "!traje": cambiar_traje,
             "!hora": decir_hora,
             "!chiste": chiste,
+            "!chisten": chiste_negro,
             "!chibi": cambiar_escala,
             "!pan": dar_pan,
             "!quitarpan": quitar_pan,
@@ -131,6 +141,37 @@ class KasaneTwitchBot(commands.Bot):
         nombre = partes[0].lower()
         argumento = partes[1].strip() if len(partes) > 1 else ""
 
+        # Solicitar una cancion:
+        if nombre == "!music":
+
+            if not argumento or len(argumento) > 120:
+                return
+
+            respuesta = await asyncio.to_thread(gestor_musica.agregar, argumento, usuario)
+
+            print(f"[Youtube music] {respuesta}")
+            return
+
+        # Consultar la cola:
+        if nombre == "!queue":
+
+            respuesta = await asyncio.to_thread(gestor_musica.ver_cola)
+
+            print(f"[Youtube Music] {respuesta}")
+
+            return
+
+        if nombre == "!skip":
+
+            if usuario.lower() != TWITCH_CHANNEL.lower():
+                return
+
+            respuesta = gestor_musica.saltar()
+
+            print(f"[Youtube music] {respuesta}")
+
+            return
+
         ahora = time.monotonic()
 
         if ahora - self.ultimo_comando < self.intervalo_comando:
@@ -161,7 +202,8 @@ class KasaneTwitchBot(commands.Bot):
                 "!alv", 
                 "!chibi", 
                 "!chiste",
-                "!traje"
+                "!traje",
+                "!chisten",
                 ):
                 await asyncio.to_thread(funcion, usuario)
 

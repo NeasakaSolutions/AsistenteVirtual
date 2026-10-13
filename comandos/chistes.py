@@ -1,12 +1,13 @@
 # Importaciones:
-import pyjokes
 import random
-from comandos.lista_chistes import chistes_malos
 from voz.hablar import hablar
 from config import NAME_USER
+from comandos.lista_chistes import (
+    chistes_malos,
+)
 from comandos.avatar import (
-    ojos_entrecerrados,
-    desactivar_ojos_entrecerrados,
+    ojos_estrella,
+    desactivar_ojos_estrella,
     mareo,
     desactivar_mareo,
     activar_rostro_oscuro,
@@ -15,25 +16,24 @@ from comandos.avatar import (
 
 
 # Funcion para que el asistente diga un chiste:
-def chiste(usuario = None):
-
-    nombre = usuario or NAME_USER
+def chiste():
 
     try:
         #chiste_generado = pyjokes.get_joke(language = "es", category= "neutral")
         chiste_generado = random.choice(chistes_malos)
 
         # Acciones del modelo:
-        ojos_entrecerrados()
+        ojos_estrella()
 
         hablar("Te advierto que mi sentido del humor es una amenaza para la humanidad, "
-            f"{nombre}. Ahí va este chiste horrendo... "
+            f"{NAME_USER}. Ahí va este chiste horrendo... "
             f"{chiste_generado}"
             " ¡Ríete por compromiso o no te hablo en todo el día!")
 
         # Acciones del modelo:
-        desactivar_ojos_entrecerrados()
+        desactivar_ojos_estrella()
 
+    # Manejo de errores:
     except Exception as error:
 
         # Debug:
@@ -43,12 +43,9 @@ def chiste(usuario = None):
         mareo()
         activar_rostro_oscuro()
 
-        hablar(f"¡Agh! Se me fue el remate, {nombre}... "
+        hablar(f"¡Agh! Se me fue el remate, {NAME_USER}... "
                "¡No te burles! Hasta la grandiosa Teto-sama necesita reiniciar su cerebro de quimera de vez en cuando.")
 
         # Acciones del modelo:
         desactivar_mareo()
         desactivar_rostro_oscuro()
-        
-    
-

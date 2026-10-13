@@ -30,4 +30,3 @@ chistes_malos = [
     '¿Cómo se llama un boomerang que no vuelve? Palo.',
     'Conocí a mi novia en un ascensor. Dice que soy el amor de subida.'
 ]
-

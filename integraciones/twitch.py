@@ -4,20 +4,20 @@ import time
 from twitchio.ext import commands
 from config import TWITCH_TOKEN, TWITCH_CHANNEL, TWITCH_LEER_CHAT
 from voz.hablar import hablar
-from comandos.hora import decir_hora
-from comandos.chibi import cambiar_escala
-from comandos.pan import dar_pan, quitar_pan
+from comandos_twitch.hora import decir_hora
+from comandos_twitch.chibi import cambiar_escala
+from comandos_twitch.pan import dar_pan, quitar_pan
 from comandos_twitch.traje import cambiar_traje
 from integraciones.youtube_music import gestor_musica
 from comandos_twitch.chistes import (
     chiste,
     chiste_negro
 )
-from comandos.albur import (
+from comandos_twitch.albur import (
     responder_albur,
     responder_alv,
 )
-from comandos.insultos import (
+from comandos_twitch.insultos import (
     insultar_kotori,
     insultar_rox,
     insultar_meowchele,

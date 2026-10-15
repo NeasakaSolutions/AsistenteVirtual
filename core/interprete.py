@@ -14,9 +14,6 @@ from comandos.albur import (
     responder_albur,
     responder_alv
 )
-from comandos.insultos import (
-    insultar_kotori
-)
 from comandos.pan import quitar_pan, dar_pan
 from voz.hablar import hablar
 from comandos.avatar import (
@@ -128,10 +125,6 @@ def ejecutar_comando(texto):
     # responder alv:
     elif "verga" in texto or "vete a la" in texto:
         responder_alv()
-
-    # Insultar a Kotori:
-    elif "kotori" in texto:
-        insultar_kotori()
 
     # Quitar el pan
     elif "quitar pan" in texto or "dame el pan" in texto:

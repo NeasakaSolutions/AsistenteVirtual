@@ -8,16 +8,15 @@ from comandos.avatar import (
 )
 
 # Funcion principal
-def cambiar_escala(usuario = None):
+def cambiar_escala():
 
-    nombre = usuario or NAME_USER
 
     # Acciones del modelo:
     modo_chibi()
     ojos_estrella()
     
 
-    hablar(f"¡Ta-daah! ¿Qué tal mi nueva escala, {nombre}? "
+    hablar(f"¡Ta-daah! ¿Qué tal mi nueva escala, {NAME_USER}? "
            "Sea grande o pequeñita, ¡sigo siendo la grandiosa Teto-sama! Más te vale adorar esta forma.")
 
     # Acciones del modelo:
